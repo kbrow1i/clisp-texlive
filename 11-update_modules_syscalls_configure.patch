@@ -1,15 +1,6 @@
-# HG changeset patch
-# User Ken Brown <kbrown@cornell.edu>
-# Date 1425652906 18000
-#      Fri Mar 06 09:41:46 2015 -0500
-# Node ID 3ee52afa4969411b4b7d61b2232c9274bcd1bce4
-# Parent  45b9d318b7c64782ca1d7cc88ac7ba50a9c97e30
-* modules/syscalls/configure: Update
-
-diff -r 45b9d318b7c6 -r 3ee52afa4969 modules/syscalls/configure
---- a/modules/syscalls/configure	Fri Mar 06 09:33:48 2015 -0500
-+++ b/modules/syscalls/configure	Fri Mar 06 09:41:46 2015 -0500
-@@ -4798,7 +4798,12 @@
+--- origsrc/clisp-2.49.50/modules/syscalls/configure	2017-03-19 17:24:42.000000000 -0400
++++ src/clisp-2.49.50/modules/syscalls/configure	2017-03-20 16:10:04.628900900 -0400
+@@ -4983,7 +4983,12 @@ fi
  done
  
  if test "$ac_cv_header_shlobj_h" = yes ; then

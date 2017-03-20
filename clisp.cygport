@@ -1,25 +1,27 @@
 NAME="clisp"
-VERSION=2.49+
+VERSION=2.49.50
 RELEASE=1
 HOMEPAGE="http://clisp.cons.org/"
 
-HG_URI="http://hg.code.sf.net/p/clisp/clisp"
-# HG_REV=15611 as of 2015-03-12
-inherit hg
 
-# The following have been sent upstream but not applied yet.
-PATCH_URI+=" http://sourceforge.net/p/clisp/patches/36/attachment/01-Handle.patch"
-PATCH_URI+=" http://sourceforge.net/p/clisp/patches/37/attachment/02-declare_ioctl.patch"
-PATCH_URI+=" http://sourceforge.net/p/clisp/patches/38/attachment/03-LINUX_NOEXEC_HEAPCODES.patch"
-PATCH_URI+=" http://sourceforge.net/p/clisp/patches/39/attachment/04-uuid.patch"
-PATCH_URI+=" http://sourceforge.net/p/clisp/patches/41/attachment/07-signal_m4.patch"
-PATCH_URI+=" http://sourceforge.net/p/clisp/patches/42/attachment/08-no___CYGWIN32__.patch"
-PATCH_URI+=" http://sourceforge.net/p/clisp/patches/43/attachment/09-x86_x4_ULONGLONG.patch"
+L_PN=libsigsegv
+L_PV=2.11
+L_P=${L_PN}-${L_PV}
+L_PATCH_URI="2.11-1-eric.patch"
 
-# The following aren't ready for upstream.
-PATCH_URI+=" 10-update_src_configure.patch"
-PATCH_URI+=" 11-update_modules_syscalls_configure.patch"
+F_PN=libffcall
+F_PV=1.13-20170225
+F_P=${F_PN}-${F_PV}
+
+SRC_URI="https://haible.de/bruno/gnu/${P}.tar.bz2"
+SRC_URI+=" mirror://gnu/${L_NAME}/${L_P}.tar.gz"
+SRC_URI+=" https://haible.de/bruno/gnu/${F_P}.tar.gz"
+
+PATCH_URI="04-uuid.patch"
+# PATCH_URI+=" 11-update_modules_syscalls_configure.patch"
+PATCH_URI+=" 20170303-update_modules_syscalls_configure.patch"
 PATCH_URI+=" 2.49-no_cygwin_README.patch"
+PATCH_URI+=" 20170306-declare_ioctl.patch"
 PATCH_URI+=" unix_line_endings_cygwin.patch"
 
 CATEGORY="Devel Interpreters Math Shells"
@@ -36,23 +38,57 @@ packages."
 
 MAKEOPTS+=" -j1"
 
-LDFLAGS="-Wl,--stack,0x800000"
-export LDFLAGS
-
-CYGCONF_ARGS="--without-dynamic-modules --without-readline --disable-nls"
-case "${ARCH}" in
-    x86_64)
-	CYGCONF_ARGS+=" --without-ffcall"
-	;;
-    i686)
-	CFLAGS+=" -falign-functions=4"
-	;;
-esac
-
 src_compile() {
+    cd ${S}/../..
+    clisp_toolsdir=$(pwd)/clisp-tools
+    mkdir -p ${clisp_toolsdir}
+    inform "Building ${L_PN}"
+    pushd src/${L_P}
+    patch -p2 < ../../../${L_PATCH_URI}
+    autoreconf
+    ./configure --prefix=${clisp_toolsdir} --disable-shared --enable-static
+    make && make check && make install || error "Building ${L_PN} failed"
+    popd
+    if [ "${ARCH}" = i686 ]
+    then
+	inform "Building ${F_PN}"
+       pushd src/${F_P}
+       ./configure --prefix=${clisp_toolsdir} --disable-shared --enable-static
+       make && make check && make install || error "Building ${F_PN} failed"
+       popd
+    fi
+    LDFLAGS="-Wl,--stack,0x800000"
+    export LDFLAGS
+    # CPPFLAGS="-DUNIX_BINARY_DISTRIB"
+    # export CPPFLAGS
+    inform "Building ${PN}"
     cd ${S}
+    CYGCONF_ARGS="
+	--without-readline
+	--disable-nls
+	--with-libsigsegv-prefix=${clisp_toolsdir}"
+	    
+# --enable-portability"
+
+    case "${ARCH}" in
+	x86_64)
+	    CYGCONF_ARGS+=" --without-ffcall"
+	    ;;
+	i686)
+	    CYGCONF_ARGS+=" --with-libffcall-prefix=${clisp_toolsdir}"
+	    ;;
+    esac
+
     verbose ./configure ${CYGCONF_ARGS} ${B} \
-	     || error "configure failed"
+	|| error "configure failed"
     cd ${B}
     cygmake
 }
+    
+       
+
+       
+    
+
+    
+
