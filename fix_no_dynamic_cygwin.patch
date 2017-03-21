@@ -1,6 +1,7 @@
---- origsrc/clisp-2.49.50/src/makemake.in	2017-03-20 20:26:07.311027800 -0400
-+++ src/clisp-2.49.50/src/makemake.in	2017-03-20 20:42:49.467086200 -0400
-@@ -3147,7 +3147,7 @@ done
+diff -r 4c9d0558e61e src/makemake.in
+--- a/src/makemake.in	Sun Feb 19 16:45:35 2017 +0100
++++ b/src/makemake.in	Tue Mar 21 12:37:38 2017 -0400
+@@ -3026,7 +3026,7 @@
  # clx depends on the symbol "hostent_to_lisp", which is defined in the
  # syscalls module and therefore doesn't get put into lisp.def on
  # Cygwin.  So we just force it.
@@ -8,4 +9,4 @@
 +if [ "${HSYSOS}" != cygwin -o "${with_dynamic_modules}" = no ]; then
    echotab "(echo; echo '/* genclisph */' ; ${HERE}genclisph clisp-test.c ${CLISP_DEF}; echo ; echo '#endif /* _CLISP_H */') >> clisp.h"
  else
-   echotab "(echo; echo '/* genclisph */' ; ${HERE}genclisph clisp-test.c ${CLISP_DEF}; echo -e \"\tlisp.exe.hostent_to_lisp\" >> ${CLISP_DEF} ; echo ; echo '#endif /* _CLISP_H */') >> clisp.h"
+     echotab "(echo; echo '/* genclisph */' ; ${HERE}genclisph clisp-test.c ${CLISP_DEF}; echo -e \"\tlisp.exe.hostent_to_lisp\" >> ${CLISP_DEF} ; echo ; echo '#endif /* _CLISP_H */') >> clisp.h"
