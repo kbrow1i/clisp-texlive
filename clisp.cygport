@@ -23,6 +23,7 @@ PATCH_URI+=" 20170303-update_modules_syscalls_configure.patch"
 PATCH_URI+=" 2.49-no_cygwin_README.patch"
 PATCH_URI+=" 20170306-declare_ioctl.patch"
 PATCH_URI+=" unix_line_endings_cygwin.patch"
+PATCH_URI+=" 2.49.50-1-no_dynamic.patch"
 
 CATEGORY="Devel Interpreters Math Shells"
 SUMMARY="A stripped-down clisp for building TeX Live"
@@ -64,6 +65,7 @@ src_compile() {
     inform "Building ${PN}"
     cd ${S}
     CYGCONF_ARGS="
+	--without-dynamic-modules
 	--without-readline
 	--disable-nls
 	--with-libsigsegv-prefix=${clisp_toolsdir}"
