@@ -14,7 +14,7 @@ F_PV=1.13-20170225
 F_P=${F_PN}-${F_PV}
 
 SRC_URI="https://haible.de/bruno/gnu/${P}.tar.bz2"
-SRC_URI+=" mirror://gnu/${L_NAME}/${L_P}.tar.gz"
+SRC_URI+=" mirror://gnu/${L_PN}/${L_P}.tar.gz"
 SRC_URI+=" https://haible.de/bruno/gnu/${F_P}.tar.gz"
 
 PATCH_URI="04-uuid.patch"
