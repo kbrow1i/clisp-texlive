@@ -1,6 +1,6 @@
 NAME="clisp"
-VERSION=2.49.50
-RELEASE=2
+VERSION=2.49.92
+RELEASE=1
 HOMEPAGE="http://clisp.cons.org/"
 
 
@@ -17,15 +17,11 @@ SRC_URI="https://haible.de/bruno/gnu/${P}.tar.bz2"
 SRC_URI+=" mirror://gnu/${L_PN}/${L_P}.tar.gz"
 SRC_URI+=" mirror://gnu/${F_PN}/${F_P}.tar.gz"
 
-PATCH_URI="04-uuid.patch"
-# PATCH_URI+=" 11-update_modules_syscalls_configure.patch"
 PATCH_URI+=" 20170303-update_modules_syscalls_configure.patch"
 PATCH_URI+=" 2.49-no_cygwin_README.patch"
-PATCH_URI+=" 20170306-declare_ioctl.patch"
-PATCH_URI+=" unix_line_endings_cygwin.patch"
-PATCH_URI+=" https://sourceforge.net/p/clisp/patches/46/attachment/fix_no_dynamic_cygwin.patch"
-PATCH_URI+=" truename.patch"
 PATCH_URI+=" 20170306-socket_test.patch"
+PATCH_URI+=" 2.49.92-fix_dllimport.patch"
+PATCH_URI+=" 2.49.92-my_realpath.patch"
  
 CATEGORY="Devel Interpreters Math Shells"
 SUMMARY="A stripped-down clisp for building TeX Live"
@@ -59,8 +55,6 @@ src_compile() {
     popd
     LDFLAGS="-Wl,--stack,0x800000"
     export LDFLAGS
-    # CPPFLAGS="-DUNIX_BINARY_DISTRIB"
-    # export CPPFLAGS
     inform "Building ${PN}"
     cd ${S}
     CYGCONF_ARGS="
@@ -70,8 +64,6 @@ src_compile() {
 	--with-libsigsegv-prefix=${clisp_toolsdir}
 	--with-libffcall-prefix=${clisp_toolsdir}"
 	    
-# --enable-portability"
-
     verbose ./configure ${CYGCONF_ARGS} ${B} \
 	|| error "configure failed"
     cd ${B}
