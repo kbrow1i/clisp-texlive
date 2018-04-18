@@ -9,13 +9,13 @@ L_PV=2.12
 L_P=${L_PN}-${L_PV}
 L_PATCH_URI="2.11-1-eric.patch"
 
-F_PN=libffcall
-F_PV=2.1
-F_P=${F_PN}-${F_PV}
+# F_PN=libffcall
+# F_PV=2.1
+# F_P=${F_PN}-${F_PV}
 
 SRC_URI="https://haible.de/bruno/gnu/${P}.tar.bz2"
 SRC_URI+=" mirror://gnu/${L_PN}/${L_P}.tar.gz"
-SRC_URI+=" mirror://gnu/${F_PN}/${F_P}.tar.gz"
+# SRC_URI+=" mirror://gnu/${F_PN}/${F_P}.tar.gz"
 
 PATCH_URI+=" 20170303-update_modules_syscalls_configure.patch"
 PATCH_URI+=" 2.49-no_cygwin_README.patch"
@@ -48,16 +48,17 @@ src_compile() {
     ./configure --prefix=${clisp_toolsdir} --disable-shared --enable-static
     make && make check && make install || error "Building ${L_PN} failed"
     popd
-    inform "Building ${F_PN}"
-    pushd src/${F_P}
-    ./configure --prefix=${clisp_toolsdir} --disable-shared --enable-static
-    make && make check && make install || error "Building ${F_PN} failed"
-    popd
+    # inform "Building ${F_PN}"
+    # pushd src/${F_P}
+    # ./configure --prefix=${clisp_toolsdir} --disable-shared --enable-static
+    # make && make check && make install || error "Building ${F_PN} failed"
+    # popd
     LDFLAGS="-Wl,--stack,0x800000"
     export LDFLAGS
     inform "Building ${PN}"
     cd ${S}
     CYGCONF_ARGS="
+	--without-ffcall
 	--without-dynamic-modules
 	--without-readline
 	--disable-nls
